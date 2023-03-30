@@ -1,0 +1,22 @@
+name: Get last uploaded .md file name
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  find_file:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Find last uploaded .md file
+        id: find_md_file
+        run: |
+          latest_file=$(git ls-files -z "*.md" | xargs -0r ls -1t | head -1)
+          echo "::set-output name=md_file::$latest_file"
+
+      - name: Print output
+        run: |
+          echo "The last uploaded .md file is ${{ steps.find_md_file.outputs.md_file }}"
